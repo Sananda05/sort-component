@@ -1,0 +1,27 @@
+.component_card{
+    height: 50px;
+    width: 300px;
+    /* border: 1px solid rgb(182, 190, 215); */
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.component_color{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}
+
+.component_card.highlighted{
+    border-top: 1px solid blue;
+}
+
+.component_card.dragging {
+    background-color: #c3ddeb;
+}
+.component_card:hover {
+    background-color: #c3ddeb;
+  }

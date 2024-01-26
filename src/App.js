@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+import { useState } from "react";
+import ViewComponent from "./component/ViewComponent";
 
 function App() {
+  const [componentList, setComponentList] = useState([
+    { id: 1, text: "Component 1", color: "red" },
+    { id: 2, text: "Component 2", color: "orange" },
+    { id: 3, text: "Component 3", color: "pink" },
+  ]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="main_container">
+        {componentList.map((component) => (
+          <ViewComponent
+            component={component}
+            componentList={componentList}
+            setComponentList={setComponentList}
+          />
+        ))}
+      </div>
     </div>
   );
 }
