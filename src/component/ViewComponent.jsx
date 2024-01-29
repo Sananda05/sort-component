@@ -1,120 +1,83 @@
 import "./view-component.css";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 import handleIcon from "../assets/icons/menu.png";
+import Makesortable from "./MakeSortable";
 
-const ViewComponent = ({ component, componentList, setComponentList }) => {
+const ViewComponent = ({ componentList, setComponentList }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [targetIndex, setTargetIndex] = useState(null);
 
-  const [draggedId, setDraggedId] = useState("");
-  const [hightlightedPosition, setHighlightedPosition] = useState(null);
+  const [isUpperHalf, setIsUpperHalf] = useState(false);
+  const [isLowerHalf, setIsLowerHalf] = useState(false);
 
-  const [prevMousePosition, setPrevMousePosition] = useState({ x: "", y: "" });
-
-  const handleDragStart = (e, id) => {
-    e.dataTransfer.setData("text/plain", id);
+  const handleMouseDown = (e) => {
     setIsDragging(true);
-    setPrevMousePosition({ x: e.clientX, y: e.clientY });
-    console.log("start", e.clientX, "and", e.clientY);
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrag = (e, id) => {
-    e.preventDefault();
-
-    const draggedId = e.dataTransfer.getData("text/plain");
-    const draggedComponent = componentList.find(
-      (c) => c.id.toString() === draggedId
-    );
-
-    const targetIndex = componentList.findIndex((c) => c.id === id);
-
-    const distanceX = e.clientX - prevMousePosition.x;
-    const distanceY = e.clientY - prevMousePosition.y;
-
-    // console.log(e.clientX, e.clientY);
-
-    // console.log(prevMousePosition.y);
-
-    if (e.clientY > prevMousePosition.y) {
-    }
-
-    // const percentage = (distanceY / window.innerHeight) * 100;
-
-    // Set the highlighted position based on the percentage
-    // setHighlightedPosition(percentage > 5 ? targetIndex + 1 : targetIndex);
-
-    // setPrevMousePosition({ x: distanceX, y: distanceY });
-  };
-
-  const handleDrop = (e, id) => {
-    e.preventDefault();
-    const draggedId = e.dataTransfer.getData("text/plain");
-    const draggedComponent = componentList.find(
-      (c) => c.id.toString() === draggedId
-    );
-    const targetIndex = componentList.findIndex((c) => c.id === id);
-    const newComponents = [...componentList];
-
-    setDraggedId(id);
-    console.log(id);
-
-    newComponents.splice(newComponents.indexOf(draggedComponent), 1);
-
-    if (targetIndex > newComponents.indexOf(draggedComponent)) {
-      newComponents.splice(targetIndex, 0, draggedComponent);
-    } else {
-      newComponents.splice(targetIndex, 0, draggedComponent);
-    }
-
-    // newComponents.splice(targetIndex, 0, draggedComponent);
-
-    console.log("end", hightlightedPosition);
-
-    setComponentList(newComponents);
-  };
   return (
-    <div
-      className={`component_card ${isDragging ? "dragging" : ""} ${
-        draggedId === component.id ? "highlighted" : ""
-      }`}
-      key={component.id}
-      draggable="false"
-      onDrag={(e) => handleDrag(e, component.id)}
-      onDragStart={(e) => handleDragStart(e, component.id.toString())}
-      onDragOver={(e) => handleDragOver(e)}
-      onDrop={(e) => handleDrop(e, component.id)}
-    >
-      <img
-        draggable
-        src={handleIcon}
-        alt=""
-        style={{ height: "16px", width: "16px", cursor: "grab" }}
-        className="handleIcon"
-      />
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "15px",
-          border: "1px solid rgb(182, 190, 215)",
-          padding: "10px",
-          borderRadius: "5px",
-        }}
-        draggable="false"
+    <>
+      <Makesortable
+        componentList={componentList}
+        setComponentList={setComponentList}
+        draggedIndex={draggedIndex}
+        targetIndex={targetIndex}
+        isUpperHalf={isUpperHalf}
+        isLowerHalf={isLowerHalf}
+        setDraggedIndex={setDraggedIndex}
+        setTargetIndex={setTargetIndex}
+        setIsUpperHalf={setIsUpperHalf}
+        setIsLowerHalf={setIsLowerHalf}
       >
-        <div
-          className="component_color"
-          style={{ backgroundColor: `${component.color}` }}
-        ></div>
-        <div>{component.text}</div>
-      </div>
-    </div>
+        {componentList?.map((component, index) => (
+          <div
+            className={`component_card ${
+              draggedIndex === index ? "dragging" : ""
+            }`}
+            style={{
+              borderTop:
+                targetIndex === index && isUpperHalf
+                  ? "2px solid #1e7bae"
+                  : "none",
+
+              borderBottom:
+                targetIndex === index && isLowerHalf
+                  ? "2px solid #1e7bae"
+                  : "none",
+
+              padding: "10px",
+              borderRadius: "5px",
+              backgroundColor: `${component.color}`,
+            }}
+            key={component?.id}
+            id={component.id}
+            draggable={false}
+          >
+            <img
+              draggable
+              src={handleIcon}
+              alt=""
+              style={{ height: "16px", width: "16px", cursor: "grab" }}
+              className="handleIcon"
+              onMouseDown={(e) => handleMouseDown(e)}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            >
+              <div>{component?.text}</div>
+            </div>
+          </div>
+        ))}
+      </Makesortable>
+    </>
   );
 };
 
