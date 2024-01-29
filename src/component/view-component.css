@@ -16,8 +16,27 @@
 
 .component_card.dragging {
     background-color: #c3ddeb;
-    /* background-color: #a6e5d0; */
+    /* background-color: #5991ff; */
 }
 .component_card:hover {
     background-color: #c3ddeb;
   }
+
+.indicator{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0;
+    background-color: #5991ff;
+    border-radius: 5px;
+    margin: 0;
+    width: 300px;
+    height: 4px;
+} 
+
+.indicator.upper{
+    top: -15px
+}
+.indicator.lower{
+    bottom: -15px;
+}

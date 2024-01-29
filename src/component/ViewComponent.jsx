@@ -2,8 +2,8 @@ import "./view-component.css";
 
 import { useState } from "react";
 
-import handleIcon from "../assets/icons/menu.png";
 import Makesortable from "./MakeSortable";
+import DragIcon from "./HandleIcon";
 
 const ViewComponent = ({ componentList, setComponentList }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -12,10 +12,6 @@ const ViewComponent = ({ componentList, setComponentList }) => {
 
   const [isUpperHalf, setIsUpperHalf] = useState(false);
   const [isLowerHalf, setIsLowerHalf] = useState(false);
-
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-  };
 
   return (
     <>
@@ -30,6 +26,7 @@ const ViewComponent = ({ componentList, setComponentList }) => {
         setTargetIndex={setTargetIndex}
         setIsUpperHalf={setIsUpperHalf}
         setIsLowerHalf={setIsLowerHalf}
+        setIsDragging={setIsDragging}
       >
         {componentList?.map((component, index) => (
           <div
@@ -37,43 +34,31 @@ const ViewComponent = ({ componentList, setComponentList }) => {
               draggedIndex === index ? "dragging" : ""
             }`}
             style={{
-              borderTop:
-                targetIndex === index && isUpperHalf
-                  ? "2px solid #1e7bae"
-                  : "none",
+              //   borderTop:
+              //     targetIndex === index && isUpperHalf ? "4px solid red" : "none",
 
-              borderBottom:
-                targetIndex === index && isLowerHalf
-                  ? "2px solid #1e7bae"
-                  : "none",
+              //   borderBottom:
+              //     targetIndex === index && isLowerHalf ? "4px solid red" : "none",
 
               padding: "10px",
               borderRadius: "5px",
               backgroundColor: `${component.color}`,
+              position: "relative",
             }}
             key={component?.id}
             id={component.id}
-            draggable={false}
+            draggable={isDragging}
           >
-            <img
-              draggable
-              src={handleIcon}
-              alt=""
-              style={{ height: "16px", width: "16px", cursor: "grab" }}
-              className="handleIcon"
-              onMouseDown={(e) => handleMouseDown(e)}
-            />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "15px",
-                padding: "10px",
-                borderRadius: "5px",
-              }}
-            >
-              <div>{component?.text}</div>
-            </div>
+            {targetIndex === index && isUpperHalf && (
+              <hr className="indicator upper " />
+            )}
+
+            <DragIcon setIsDragging={setIsDragging} />
+            {targetIndex === index && isLowerHalf && (
+              <hr className="indicator lower" />
+            )}
+
+            <div>{component?.text}</div>
           </div>
         ))}
       </Makesortable>

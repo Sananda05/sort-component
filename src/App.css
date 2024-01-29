@@ -3,22 +3,23 @@
   position: relative;
   height: 100vh;
   width: 100%;
+  background-color: rgb(16, 16, 16);
 }
 
 .main_container{
   position: absolute;
-  height: 50%;
+  height: 60%;
   width: 50%;
   top: 50%;
   left: 50%;
   transform: translate( -50%, -50%);
-  background-color: rgb(219, 238, 248);
+  background-color: rgb(18, 18, 18);
   border: none;
   border-radius: 10px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 5px rgba(86, 162, 249, 0.3);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
   align-items: center;
   justify-content: center;
 }

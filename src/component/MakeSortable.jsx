@@ -9,6 +9,7 @@ const Makesortable = ({
   setTargetIndex,
   setIsUpperHalf,
   setIsLowerHalf,
+  setIsDragging,
   children,
 }) => {
   const handleDragStart = (e, id, index) => {
@@ -57,6 +58,7 @@ const Makesortable = ({
       setTargetIndex(null);
       setIsLowerHalf(false);
       setIsUpperHalf(false);
+      setIsDragging(false);
     }
   };
 
@@ -65,6 +67,7 @@ const Makesortable = ({
     setTargetIndex(null);
     setIsLowerHalf(false);
     setIsUpperHalf(false);
+    setIsDragging(false);
   };
   return (
     <>
