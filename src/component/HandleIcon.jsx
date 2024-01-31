@@ -1,7 +1,12 @@
 const DragIcon = ({ setIsDragging }) => {
   const handleMouseDown = () => {
+    const targetComponent = document.querySelector(".component_card");
+
+    console.log("okayyy");
+
     setIsDragging(true);
   };
+
   return (
     <div
       style={{

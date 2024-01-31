@@ -1,17 +1,14 @@
-const Makesortable = ({
-  componentList,
-  setComponentList,
-  draggedIndex,
-  targetIndex,
-  isUpperHalf,
-  isLowerHalf,
-  setDraggedIndex,
-  setTargetIndex,
-  setIsUpperHalf,
-  setIsLowerHalf,
-  setIsDragging,
-  children,
-}) => {
+import { useState } from "react";
+
+import "./makesortable.css";
+
+const Makesortable = ({ componentList, setComponentList, children }) => {
+  let [isUpperHalf, setIsUpperHalf] = useState(false);
+  let [isLowerHalf, setIsLowerHalf] = useState(false);
+
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [targetIndex, setTargetIndex] = useState(null);
+
   const handleDragStart = (e, id, index) => {
     setDraggedIndex(index);
   };
@@ -22,19 +19,20 @@ const Makesortable = ({
     setTargetIndex(index);
 
     const mouseY = e.clientY;
-    const componentRect = e.target.getBoundingClientRect();
-    const componentHeight = componentRect.height;
-    const componentTop = componentRect.top;
-    const componentBottom = componentTop + componentHeight;
+    const targetElement = e.currentTarget;
+    const targetRect = targetElement.getBoundingClientRect();
+    const targetTop = targetRect.top + window.scrollY; // Consider the scroll offset
+    const targetHeight = targetRect.height;
 
-    const distanceFromTop = mouseY - componentTop;
-    const distanceFromBottom = componentBottom - mouseY;
+    const distanceFromTop = mouseY - targetTop;
+    const percentageFromTop = (distanceFromTop / targetHeight) * 100;
 
-    const percentageFromTop = (distanceFromTop / componentHeight) * 100;
-    const percentageFromBottom = (distanceFromBottom / componentHeight) * 100;
+    // console.log(percentageFromTop);
 
-    isUpperHalf = percentageFromTop < 50;
-    isLowerHalf = percentageFromBottom < 50;
+    const threshold = 50;
+
+    const isUpperHalf = percentageFromTop < threshold;
+    const isLowerHalf = percentageFromTop >= threshold;
 
     setIsUpperHalf(isUpperHalf);
     setIsLowerHalf(isLowerHalf);
@@ -42,6 +40,34 @@ const Makesortable = ({
 
   const handleDrop = (e, id) => {
     e.preventDefault();
+    let dropIndex = targetIndex;
+
+    if (isLowerHalf) {
+      const updatedComponents = [...componentList];
+      if (draggedIndex > targetIndex) {
+        dropIndex += 1;
+      }
+      if (draggedIndex < targetIndex) {
+        [updatedComponents[dropIndex], updatedComponents[dropIndex - 1]] = [
+          updatedComponents[dropIndex - 1],
+          updatedComponents[dropIndex],
+        ];
+      }
+    }
+
+    if (isUpperHalf) {
+      const updatedComponents = [...componentList];
+      if (draggedIndex > targetIndex) {
+        [updatedComponents[dropIndex + 1], updatedComponents[dropIndex]] = [
+          updatedComponents[dropIndex],
+          updatedComponents[dropIndex + 1],
+        ];
+      }
+      if (draggedIndex < targetIndex) {
+        dropIndex -= 1;
+      }
+    }
+
     if (
       draggedIndex !== null &&
       targetIndex !== null &&
@@ -49,16 +75,12 @@ const Makesortable = ({
     ) {
       const updatedComponents = [...componentList];
       const [draggedComponent] = updatedComponents.splice(draggedIndex, 1);
-      updatedComponents.splice(targetIndex, 0, draggedComponent);
+      updatedComponents.splice(dropIndex, 0, draggedComponent);
       setComponentList(updatedComponents);
 
-      console.log(updatedComponents);
+      //   console.log(updatedComponents);
 
-      setDraggedIndex(null);
-      setTargetIndex(null);
-      setIsLowerHalf(false);
-      setIsUpperHalf(false);
-      setIsDragging(false);
+      handleDragEnd();
     }
   };
 
@@ -67,7 +89,6 @@ const Makesortable = ({
     setTargetIndex(null);
     setIsLowerHalf(false);
     setIsUpperHalf(false);
-    setIsDragging(false);
   };
   return (
     <>
@@ -79,9 +100,18 @@ const Makesortable = ({
           onDragEnd={handleDragEnd}
           onDrop={(e) => handleDrop(e, item.key)}
         >
+          {targetIndex === index &&
+            isUpperHalf &&
+            targetIndex !== draggedIndex &&
+            !isLowerHalf && <hr className="hr-tag-top" />}
           {item}
+          {targetIndex === index &&
+            isLowerHalf &&
+            targetIndex !== draggedIndex &&
+            !isUpperHalf && <hr className="hr-tag-bottom" />}
         </div>
       ))}
+      {/* {console.log(children)} */}
     </>
   );
 };

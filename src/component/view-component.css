@@ -6,6 +6,9 @@
     align-items: center;
     justify-content: center;
     gap: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
 }
 
 .component_color{
@@ -19,24 +22,5 @@
     /* background-color: #5991ff; */
 }
 .component_card:hover {
-    background-color: #c3ddeb;
+    opacity: 0.5;
   }
-
-.indicator{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 0;
-    background-color: #f4572f;
-    border-radius: 5px;
-    margin: 0;
-    width: 300px;
-    height: 4px;
-} 
-
-.indicator.upper{
-    top: -15px
-}
-.indicator.lower{
-    bottom: -15px;
-}

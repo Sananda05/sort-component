@@ -1,0 +1,29 @@
+.hr-tag-top{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0;
+    background-color: #f4572f;
+    border-radius: 5px;
+    
+    width: 250px;
+    height: 4px;
+    /* z-index: 2; */
+    margin-top: -15px;
+   
+}
+
+.hr-tag-bottom{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0;
+    background-color: #12e9f8;
+    border-radius: 5px;
+    margin: 0;
+    width: 250px;
+    height: 4px;
+    /* z-index: 2; */
+    margin-top: 15px;
+    /* bottom: 10px; */
+}
